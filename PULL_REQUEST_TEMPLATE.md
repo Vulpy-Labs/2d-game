@@ -1,8 +1,9 @@
 ## Information
 
-#### Describe How It Was Done
+#### Describe What Was Done
 
-_"And there was light."_ 💡
+_"Before, there was nothing
+And God said, “Let there be light,” and there was light."_ 💡
 
 ---
 
