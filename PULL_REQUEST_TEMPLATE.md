@@ -30,5 +30,3 @@ _“Let there be light, and there was light."_ 💡
 #### Rollback Plan
 
 Revert from the branch.
-
----
