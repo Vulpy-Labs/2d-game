@@ -2,8 +2,7 @@
 
 #### Describe What Was Done
 
-_"Before, there was nothing
-And God said, “Let there be light,” and there was light."_ 💡
+_“Let there be light, and there was light."_ 💡
 
 ---
 
