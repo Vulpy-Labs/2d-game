@@ -1,3 +1,4 @@
+import i18next from '../../../18n';
 import { Scene, GameObjects } from 'phaser';
 
 export class MainMenu extends Scene {
@@ -15,7 +16,7 @@ export class MainMenu extends Scene {
     this.logo = this.add.image(512, 300, 'logo');
 
     this.title = this.add
-      .text(512, 460, 'Main Menu', {
+      .text(512, 460, i18next.t('main_menu.title'), {
         fontFamily: 'Arial Black',
         fontSize: 38,
         color: '#ffffff',
@@ -25,8 +26,35 @@ export class MainMenu extends Scene {
       })
       .setOrigin(0.5);
 
-    this.input.once('pointerdown', () => {
-      this.scene.start('Game');
-    });
+    // Language selection buttons
+    this.add
+      .text(100, 200, i18next.t('main_menu.options.languages.en'))
+      .setInteractive()
+      .on('pointerdown', () => {
+        i18next.changeLanguage('en').then(() => {
+          this.updateTexts();
+        });
+      });
+
+    this.add
+      .text(200, 200, i18next.t('main_menu.options.languages.pt'))
+      .setInteractive()
+      .on('pointerdown', () => {
+        i18next.changeLanguage('pt').then(() => {
+          this.updateTexts();
+        });
+      });
+
+    this.add
+      .text(400, 200, 'Próxima cena')
+      .setInteractive()
+      .on('pointerdown', () => {
+        this.scene.start('Game');
+      });
+  }
+
+  updateTexts() {
+    this.title.setText(i18next.t('main_menu.title'));
+    // Update other texts as needed
   }
 }
