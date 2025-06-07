@@ -3,7 +3,7 @@ export class TestScene extends Phaser.Scene {
   gameHeight: number;
   platforms: Phaser.Physics.Arcade.StaticGroup;
   ground: Phaser.GameObjects.Rectangle;
-  player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
@@ -12,7 +12,7 @@ export class TestScene extends Phaser.Scene {
 
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
-    this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+    this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
   }
 
   init() {
@@ -24,7 +24,7 @@ export class TestScene extends Phaser.Scene {
     this.createTitle();
     this.createGround();
     this.createPlatforms();
-    this.createPlayer();
+    this.createCharacter();
   }
 
   createTitle() {
@@ -100,11 +100,11 @@ export class TestScene extends Phaser.Scene {
     });
   }
 
-  createPlayer() {
-    this.player = this.physics.add.sprite(450, 600, 'player');
+  createCharacter() {
+    this.character = this.physics.add.sprite(450, 600, 'character');
 
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.player, this.platforms);
+    this.character.setCollideWorldBounds(true);
+    this.physics.add.collider(this.character, this.ground);
+    this.physics.add.collider(this.character, this.platforms);
   }
 }
