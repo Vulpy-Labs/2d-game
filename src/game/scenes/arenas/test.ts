@@ -102,5 +102,7 @@ export class TestScene extends Phaser.Scene {
 
   createPlayer() {
     this.player = this.physics.add.sprite(450, 600, 'player');
+
+    this.player.setCollideWorldBounds(true);
   }
 }
