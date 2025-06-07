@@ -24,6 +24,7 @@ export class TestScene extends Phaser.Scene {
     this.createTitle();
     this.createGround();
     this.createPlatforms();
+    this.createPlayer();
   }
 
   createTitle() {
@@ -97,5 +98,9 @@ export class TestScene extends Phaser.Scene {
         .setScale(scaleX, scaleY)
         .refreshBody();
     });
+  }
+
+  createPlayer() {
+    this.player = this.physics.add.sprite(450, 600, 'player');
   }
 }
