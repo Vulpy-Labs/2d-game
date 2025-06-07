@@ -16,6 +16,9 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
+  input: {
+    keyboard: true,
+  },
   scene: [Boot, Preloader, TestScene],
 };
 
