@@ -25,6 +25,8 @@ export class TestScene extends Phaser.Scene {
     this.createGround();
     this.createPlatforms();
     this.createCharacter();
+    this.createKeyboardInputs();
+
   }
 
   createTitle() {
@@ -107,4 +109,9 @@ export class TestScene extends Phaser.Scene {
     this.physics.add.collider(this.character, this.ground);
     this.physics.add.collider(this.character, this.platforms);
   }
+
+  createKeyboardInputs() {
+    this.cursors = this.input.keyboard!.createCursorKeys();
+  }
+
 }
