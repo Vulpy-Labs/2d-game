@@ -12,6 +12,7 @@ export class TestScene extends Phaser.Scene {
 
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
+    this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
   }
 
   init() {
