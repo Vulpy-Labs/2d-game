@@ -33,13 +33,16 @@ export class TestScene extends Phaser.Scene {
   }
 
   createGround() {
-    this.ground = this.add.rectangle(
-      Number(this.gameWidth) / 2,
-      Number(this.gameHeight),
-      Number(this.gameWidth),
-      Number(this.gameHeight) / 6,
-      0x8b4513
-    );
+    this.ground = this.add
+      .rectangle(
+        0,
+        Number(this.gameHeight),
+        Number(this.gameWidth),
+        Number(this.gameHeight) / 15,
+        0x8b4513
+      )
+      .setOrigin(0, 1);
+
     this.physics.add.existing(this.ground, true);
   }
 
