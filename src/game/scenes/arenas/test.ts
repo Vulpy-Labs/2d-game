@@ -1,11 +1,13 @@
 import {
   CHARACTER_SPEED_X,
   CHARACTER_SPEED_Y,
+  VIRTUAL_HEIGHT,
+  VIRTUAL_WIDTH,
 } from '../../constants';
 
 export class TestScene extends Phaser.Scene {
-  gameWidth: number;
-  gameHeight: number;
+  gameWidth = VIRTUAL_WIDTH;
+  gameHeight = VIRTUAL_HEIGHT;
   platforms: Phaser.Physics.Arcade.StaticGroup;
   ground: Phaser.GameObjects.Rectangle;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -18,11 +20,6 @@ export class TestScene extends Phaser.Scene {
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
     this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
-  }
-
-  init() {
-    this.gameWidth = this.scale.width;
-    this.gameHeight = this.scale.height;
   }
 
   create() {
@@ -46,10 +43,10 @@ export class TestScene extends Phaser.Scene {
 
   createGround() {
     this.ground = this.add.rectangle(
-      Number(this.gameWidth) / 2,
-      Number(this.gameHeight),
-      Number(this.gameWidth),
-      Number(this.gameHeight) / 6,
+      this.gameWidth / 2,
+      this.gameHeight,
+      this.gameWidth,
+      this.gameHeight / 6,
       0x8b4513
     );
     this.physics.add.existing(this.ground, true);
