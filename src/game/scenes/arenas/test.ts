@@ -1,3 +1,8 @@
+import {
+  CHARACTER_SPEED_X,
+  CHARACTER_SPEED_Y,
+} from '../../constants';
+
 export class TestScene extends Phaser.Scene {
   gameWidth: number;
   gameHeight: number;
@@ -121,15 +126,15 @@ export class TestScene extends Phaser.Scene {
     if (!this.character || !this.cursors) return;
 
     if (this.cursors.left?.isDown) {
-      this.character.setVelocityX(-300);
+      this.character.setVelocityX(-CHARACTER_SPEED_X);
     } else if (this.cursors.right?.isDown) {
-      this.character.setVelocityX(300);
+      this.character.setVelocityX(CHARACTER_SPEED_X);
     } else {
       this.character.setVelocityX(0);
     }
 
     if (this.cursors.up?.isDown && this.character.body.touching.down) {
-      this.character.setVelocityY(-700);
+      this.character.setVelocityY(-CHARACTER_SPEED_Y);
     }
   }
 }
