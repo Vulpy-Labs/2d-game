@@ -17,6 +17,14 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  render: {
+    pixelArt: true,
+    antialias: false,
+  },
   input: {
     keyboard: true,
   },
