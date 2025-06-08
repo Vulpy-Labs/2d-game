@@ -48,42 +48,15 @@ export class TestScene extends Phaser.Scene {
 
   createPlatforms() {
     const data = [
-      {
-        posX: 0,
-        posY: 600,
-        scaleY: 0.5,
-        scaleX: 0.4,
-      },
-      {
-        posX: 0,
-        posY: 360,
-        scaleY: 0.5,
-        scaleX: 1.1,
-      },
-      {
-        posX: 270,
-        posY: 520,
-        scaleY: 0.5,
-        scaleX: 0.6,
-      },
-      {
-        posX: 650,
-        posY: 460,
-        scaleY: 0.5,
-        scaleX: 0.25,
-      },
-      {
-        posX: 625,
-        posY: 600,
-        scaleY: 0.5,
-        scaleX: 0.8,
-      },
-      {
-        posX: 875,
-        posY: 370,
-        scaleY: 0.5,
-        scaleX: 0.3,
-      },
+      { posX: 0, posY: 930, scaleX: 0.4, scaleY: 0.5 },
+      { posX: 0, posY: 680, scaleX: 1.1, scaleY: 0.5 },
+      { posX: 280, posY: 850, scaleX: 0.7, scaleY: 0.5 },
+      { posX: 620, posY: 560, scaleX: 0.4, scaleY: 0.5 },
+      { posX: 680, posY: 760, scaleX: 0.3, scaleY: 0.5 },
+      { posX: 700, posY: 930, scaleX: 0.3, scaleY: 0.5 },
+      { posX: 925, posY: 800, scaleX: 0.8, scaleY: 0.5 },
+      { posX: 950, posY: 600, scaleX: 0.3, scaleY: 0.5 },
+      { posX: 1100, posY: 700, scaleX: 0.3, scaleY: 0.5 },
     ];
 
     this.platformFactory(data);
