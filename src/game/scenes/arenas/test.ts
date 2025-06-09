@@ -3,7 +3,7 @@ export class TestScene extends Phaser.Scene {
   gameHeight: number;
   platforms: Phaser.Physics.Arcade.StaticGroup;
   ground: Phaser.GameObjects.Rectangle;
-  player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
@@ -12,6 +12,7 @@ export class TestScene extends Phaser.Scene {
 
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
+    this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
   }
 
   init() {
@@ -23,6 +24,12 @@ export class TestScene extends Phaser.Scene {
     this.createTitle();
     this.createGround();
     this.createPlatforms();
+    this.createCharacter();
+    this.createKeyboardInputs();
+  }
+
+  update() {
+    this.updateCharacterMoviment();
   }
 
   createTitle() {
@@ -72,5 +79,33 @@ export class TestScene extends Phaser.Scene {
         .setScale(scaleX, scaleY)
         .refreshBody();
     });
+  }
+
+  createCharacter() {
+    this.character = this.physics.add.sprite(450, 600, 'character');
+
+    this.character.setCollideWorldBounds(true);
+    this.physics.add.collider(this.character, this.ground);
+    this.physics.add.collider(this.character, this.platforms);
+  }
+
+  createKeyboardInputs() {
+    this.cursors = this.input.keyboard!.createCursorKeys();
+  }
+
+  updateCharacterMoviment() {
+    if (!this.character || !this.cursors) return;
+
+    if (this.cursors.left?.isDown) {
+      this.character.setVelocityX(-300);
+    } else if (this.cursors.right?.isDown) {
+      this.character.setVelocityX(300);
+    } else {
+      this.character.setVelocityX(0);
+    }
+
+    if (this.cursors.up?.isDown && this.character.body.touching.down) {
+      this.character.setVelocityY(-700);
+    }
   }
 }
