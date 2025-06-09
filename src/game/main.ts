@@ -1,6 +1,7 @@
 import { Boot } from './scenes/Boot';
 import { AUTO, Game } from 'phaser';
 import { Preloader } from './scenes/Preloader';
+import { TestScene } from './scenes/arenas/test';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: AUTO,
@@ -15,6 +16,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
+  scene: [Boot, Preloader, TestScene],
 };
 
 const StartGame = (parent: string) => {
