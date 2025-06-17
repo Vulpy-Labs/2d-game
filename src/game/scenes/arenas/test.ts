@@ -181,6 +181,9 @@ export class TestScene extends Phaser.Scene {
       this.character.anims.play('jump', true);
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
 
+      if (this.character.body.touching.down) {
+        this.character.anims.play('idle');
+      }
     }
   }
 }
