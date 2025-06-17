@@ -19,7 +19,26 @@ export class TestScene extends Phaser.Scene {
 
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
-    this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+    this.load.spritesheet('idle', 'assets/characters/otomo/v1/spr_idle.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('run', 'assets/characters/otomo/v1/spr_running.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('jump', 'assets/characters/otomo/v1/spr_jump.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('look_up', 'assets/characters/otomo/v1/spr_lookup.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('look_down', 'assets/characters/otomo/v1/spr_lookdown.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
   }
 
   create() {
