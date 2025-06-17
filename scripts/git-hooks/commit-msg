@@ -20,6 +20,7 @@ esac
 # Site com a lista de emojis: https://gitmoji.dev/
 declare -A types_emojis=(
   [asset]="🍱"
+  [animation]="💫"
   [build]="🏗"
   [chore]="🧹"
   [ci]="👷"
