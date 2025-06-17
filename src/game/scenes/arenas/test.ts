@@ -185,5 +185,13 @@ export class TestScene extends Phaser.Scene {
         this.character.anims.play('idle');
       }
     }
+
+    if (this.cursors.up?.isDown) {
+      this.character.anims.play('look_up', true);
+    }
+
+    if (this.cursors.down?.isDown) {
+      this.character.anims.play('look_down', true);
+    }
   }
 }
