@@ -161,9 +161,17 @@ export class TestScene extends Phaser.Scene {
     if (this.cursors.left?.isDown) {
       this.character.setFlipX(true);
       this.character.setVelocityX(-CHARACTER_SPEED_X);
+
+      if (this.character.body.touching.down) {
+        this.character.anims.play('left', true);
+      }
     } else if (this.cursors.right?.isDown) {
       this.character.setFlipX(false);
       this.character.setVelocityX(CHARACTER_SPEED_X);
+
+      if (this.character.body.touching.down) {
+        this.character.anims.play('right', true);
+      }
     } else {
       this.character.anims.play('idle', true);
       this.character.setVelocityX(0);
