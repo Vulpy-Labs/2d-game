@@ -100,7 +100,7 @@ export class TestScene extends Phaser.Scene {
   }
 
   createCharacter() {
-    this.character = this.physics.add.sprite(450, 600, 'character');
+    this.character = this.physics.add.sprite(450, 600, 'idle').setScale(3);
 
     this.character.setCollideWorldBounds(true);
     this.physics.add.collider(this.character, this.ground);
