@@ -105,6 +105,50 @@ export class TestScene extends Phaser.Scene {
     this.character.setCollideWorldBounds(true);
     this.physics.add.collider(this.character, this.ground);
     this.physics.add.collider(this.character, this.platforms);
+    this.createCharacterAnimations();
+  }
+
+  createCharacterAnimations() {
+    this.anims.create({
+      key: 'idle',
+      frames: this.anims.generateFrameNumbers('idle', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('run', { start: 0, end: 1 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'right',
+      frames: this.anims.generateFrameNumbers('run', { start: 0, end: 1 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'look_up',
+      frames: this.anims.generateFrameNumbers('look_up', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'look_down',
+      frames: this.anims.generateFrameNumbers('look_down', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'jump',
+      frames: this.anims.generateFrameNumbers('jump', { start: 1, end: 2 }),
+      frameRate: 12,
+    });
   }
 
   createKeyboardInputs() {
