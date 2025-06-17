@@ -165,6 +165,7 @@ export class TestScene extends Phaser.Scene {
       this.character.setFlipX(false);
       this.character.setVelocityX(CHARACTER_SPEED_X);
     } else {
+      this.character.anims.play('idle', true);
       this.character.setVelocityX(0);
     }
 
