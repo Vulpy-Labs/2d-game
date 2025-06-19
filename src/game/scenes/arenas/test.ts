@@ -5,6 +5,8 @@ import {
   VIRTUAL_WIDTH,
 } from '../../constants';
 
+type CharacterState = 'IDLE' | 'RUNNING' | 'JUMPING' | 'IN_AIR' | 'LOOKING_UP' | 'LOOKING_DOWN';
+
 export class TestScene extends Phaser.Scene {
   gameWidth = VIRTUAL_WIDTH;
   gameHeight = VIRTUAL_HEIGHT;
@@ -12,6 +14,7 @@ export class TestScene extends Phaser.Scene {
   ground: Phaser.GameObjects.Rectangle;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  characterState: CharacterState = 'IDLE';
 
   constructor() {
     super('TestScene');
