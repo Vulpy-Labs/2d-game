@@ -54,7 +54,7 @@ export class TestScene extends Phaser.Scene {
   }
 
   update() {
-    this.updateCharacterMoviment();
+    this.updateCharacterMovement();
   }
 
   createTitle() {
@@ -163,7 +163,7 @@ export class TestScene extends Phaser.Scene {
     this.cursors = this.input.keyboard!.createCursorKeys();
   }
 
-  updateCharacterMoviment() {
+  updateCharacterMovement() {
     if (!this.character || !this.cursors) return;
 
     if (this.cursors.left?.isDown) {
