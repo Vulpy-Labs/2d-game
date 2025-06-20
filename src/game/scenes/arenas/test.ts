@@ -193,6 +193,7 @@ export class TestScene extends Phaser.Scene {
     if (!this.character || !this.cursors) return;
 
     this.updateHorizontalMovement();
+    this.updateVerticalMovement();
   }
 
   updateHorizontalMovement() {
@@ -219,8 +220,23 @@ export class TestScene extends Phaser.Scene {
     }
   }
 
-    if (this.cursors.up?.isDown && this.character.body.touching.down) {
+  updateVerticalMovement() {
+    const onGround = this.character.body.touching.down;
+    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
+
+    if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && onGround) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
+      this.setCharacterState('JUMPING');
+    }
+
+    if (!onGround) {
+      this.setCharacterState('IN_AIR');
+    }
+
+    if (this.cursors.up.isDown && !isMovingHorizontally && onGround) {
+      this.setCharacterState('LOOKING_UP');
+    } else if (this.cursors.down.isDown && !isMovingHorizontally && onGround) {
+      this.setCharacterState('LOOKING_DOWN');
     }
   }
 }
