@@ -192,13 +192,32 @@ export class TestScene extends Phaser.Scene {
   updateCharacterMovement() {
     if (!this.character || !this.cursors) return;
 
-    if (this.cursors.left?.isDown) {
+    this.updateHorizontalMovement();
+  }
+
+  updateHorizontalMovement() {
+    const onGround = this.character.body.touching.down;
+    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
+
+    if (this.cursors.left.isDown) {
       this.character.setVelocityX(-CHARACTER_SPEED_X);
-    } else if (this.cursors.right?.isDown) {
+      this.character.setFlipX(true);
+
+      if (onGround) {
+        this.setCharacterState('RUNNING');
+      }
+    } else if (this.cursors.right.isDown) {
       this.character.setVelocityX(CHARACTER_SPEED_X);
-    } else {
+      this.character.setFlipX(false);
+
+      if (onGround) {
+        this.setCharacterState('RUNNING');
+      }
+    } else if (onGround && !isMovingHorizontally) {
       this.character.setVelocityX(0);
+      this.setCharacterState('IDLE');
     }
+  }
 
     if (this.cursors.up?.isDown && this.character.body.touching.down) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
