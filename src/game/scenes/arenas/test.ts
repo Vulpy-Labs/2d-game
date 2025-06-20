@@ -22,7 +22,27 @@ export class TestScene extends Phaser.Scene {
 
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
-    this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+
+    this.load.spritesheet('spr_idle', 'assets/characters/otomo/v1/spr_idle.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('spr_running', 'assets/characters/otomo/v1/spr_running.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('spr_jump', 'assets/characters/otomo/v1/spr_jump.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('spr_lookup', 'assets/characters/otomo/v1/spr_lookup.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
+    this.load.spritesheet('spr_lookdown', 'assets/characters/otomo/v1/spr_lookdown.png', {
+      frameWidth: 16,
+      frameHeight: 18,
+    });
   }
 
   create() {
@@ -84,12 +104,56 @@ export class TestScene extends Phaser.Scene {
   }
 
   createCharacter() {
-    this.character = this.physics.add.sprite(450, 600, 'character');
+    this.character = this.physics.add.sprite(450, 600, 'spr_idle').setScale(3);
 
+    this.createCharacterAnimations();
     this.character.setCollideWorldBounds(true);
     this.physics.add.collider(this.character, this.ground);
     this.physics.add.collider(this.character, this.platforms);
   }
+
+  createCharacterAnimations() {
+    this.anims.create({
+      key: 'anim_idle',
+      frames: this.anims.generateFrameNumbers('spr_idle', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_running',
+      frames: this.anims.generateFrameNumbers('spr_running', { start: 0, end: 1 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_look_up',
+      frames: this.anims.generateFrameNumbers('spr_lookup', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_look_down',
+      frames: this.anims.generateFrameNumbers('spr_lookdown', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_jump',
+      frames: this.anims.generateFrameNumbers('spr_jump', { start: 1, end: 2 }),
+      frameRate: 12,
+    });
+
+    this.anims.create({
+      key: 'anim_in_air',
+      frames: this.anims.generateFrameNumbers('spr_jump', { start: 2, end: 2 }),
+      frameRate: 12,
+    });
+  }
+
 
   createKeyboardInputs() {
     this.cursors = this.input.keyboard!.createCursorKeys();
