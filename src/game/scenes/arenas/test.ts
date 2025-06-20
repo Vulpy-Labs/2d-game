@@ -158,6 +158,32 @@ export class TestScene extends Phaser.Scene {
     });
   }
 
+  setCharacterState(newState: CharacterState) {
+    if (this.characterState === newState) return;
+
+    this.characterState = newState;
+
+    switch (newState) {
+      case 'IDLE':
+        this.character.anims.play('anim_idle', true);
+        break;
+      case 'RUNNING':
+        this.character.anims.play('anim_running', true);
+        break;
+      case 'JUMPING':
+        this.character.anims.play('anim_jump', true);
+        break;
+      case 'IN_AIR':
+        this.character.anims.play('anim_in_air', true);
+        break;
+      case 'LOOKING_UP':
+        this.character.anims.play('anim_look_up', true);
+        break;
+      case 'LOOKING_DOWN':
+        this.character.anims.play('anim_look_down', true);
+        break;
+    }
+  }
 
   createKeyboardInputs() {
     this.cursors = this.input.keyboard!.createCursorKeys();
