@@ -21,8 +21,19 @@ export class TestScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
+    this.loadAssets();
+  }
 
+  loadAssets() {
+    this.loadArenaAssets();
+    this.loadCharacterMovementAssets();
+  }
+
+  loadArenaAssets() {
+    this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
+  }
+
+  loadCharacterMovementAssets() {
     this.load.spritesheet('spr_idle', 'assets/characters/otomo/v1/spr_idle.png', {
       frameWidth: 16,
       frameHeight: 16,
