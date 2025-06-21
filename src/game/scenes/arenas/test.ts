@@ -128,6 +128,10 @@ export class TestScene extends Phaser.Scene {
   }
 
   createCharacterAnimations() {
+    this.createCharacterMovementAnimations();
+  }
+
+  createCharacterMovementAnimations() {
     this.anims.create({
       key: 'anim_idle',
       frames: this.anims.generateFrameNumbers('spr_idle', { start: 0, end: 0 }),
