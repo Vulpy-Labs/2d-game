@@ -25,23 +25,23 @@ export class TestScene extends Phaser.Scene {
 
     this.load.spritesheet('spr_idle', 'assets/characters/otomo/v1/spr_idle.png', {
       frameWidth: 16,
-      frameHeight: 18,
+      frameHeight: 16,
     });
     this.load.spritesheet('spr_running', 'assets/characters/otomo/v1/spr_running.png', {
       frameWidth: 16,
-      frameHeight: 18,
+      frameHeight: 16,
     });
     this.load.spritesheet('spr_jump', 'assets/characters/otomo/v1/spr_jump.png', {
       frameWidth: 16,
-      frameHeight: 18,
+      frameHeight: 16,
     });
     this.load.spritesheet('spr_lookup', 'assets/characters/otomo/v1/spr_lookup.png', {
       frameWidth: 16,
-      frameHeight: 18,
+      frameHeight: 16,
     });
     this.load.spritesheet('spr_lookdown', 'assets/characters/otomo/v1/spr_lookdown.png', {
       frameWidth: 16,
-      frameHeight: 18,
+      frameHeight: 16,
     });
   }
 
