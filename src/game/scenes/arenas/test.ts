@@ -46,11 +46,11 @@ export class TestScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
-    this.load.spritesheet('spr_lookup', 'assets/characters/otomo/v1/spr_lookup.png', {
+    this.load.spritesheet('spr_look_up', 'assets/characters/otomo/v1/spr_lookup.png', {
       frameWidth: 16,
       frameHeight: 16,
     });
-    this.load.spritesheet('spr_lookdown', 'assets/characters/otomo/v1/spr_lookdown.png', {
+    this.load.spritesheet('spr_look_down', 'assets/characters/otomo/v1/spr_lookdown.png', {
       frameWidth: 16,
       frameHeight: 16,
     });
@@ -144,14 +144,14 @@ export class TestScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'anim_look_up',
-      frames: this.anims.generateFrameNumbers('spr_lookup', { start: 0, end: 0 }),
+      frames: this.anims.generateFrameNumbers('spr_look_up', { start: 0, end: 0 }),
       frameRate: 7,
       repeat: -1,
     });
 
     this.anims.create({
       key: 'anim_look_down',
-      frames: this.anims.generateFrameNumbers('spr_lookdown', { start: 0, end: 0 }),
+      frames: this.anims.generateFrameNumbers('spr_look_down', { start: 0, end: 0 }),
       frameRate: 7,
       repeat: -1,
     });
