@@ -103,7 +103,7 @@ export class TestScene extends Phaser.Scene {
       this.character.setVelocityX(0);
     }
 
-    if (this.cursors.up?.isDown && this.character.body.touching.down) {
+    if (this.cursors.up?.isDown && this.character.body.blocked.down) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
     }
   }
