@@ -8,8 +8,9 @@ import {
 export class TestScene extends Phaser.Scene {
   gameWidth = VIRTUAL_WIDTH;
   gameHeight = VIRTUAL_HEIGHT;
-  platforms: Phaser.Physics.Arcade.StaticGroup;
-  ground: Phaser.GameObjects.Rectangle;
+  mapImages: string[];
+  platforms: Phaser.Tilemaps.TilemapLayer;
+  map: Phaser.Tilemaps.Tilemap;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
@@ -20,13 +21,13 @@ export class TestScene extends Phaser.Scene {
   preload() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
     this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+    this.load.tilemapTiledJSON('canyon_map', 'assets/maps/canyon.json');
+    this.loadMapImages();
   }
 
   create() {
+    this.createMap();
     this.createTitle();
-    this.createGround();
-    this.createPlatforms();
-    this.createCharacter();
     this.createKeyboardInputs();
   }
 
@@ -34,57 +35,66 @@ export class TestScene extends Phaser.Scene {
     this.updateCharacterMoviment();
   }
 
-  createTitle() {
-    this.add.text(16, 16, 'Samurai Gunn Level Test', {
-      fontSize: '24px',
-      color: '#000',
-    });
-  }
-
-  createGround() {
-    this.ground = this.add.rectangle(
-      this.gameWidth / 2,
-      this.gameHeight,
-      this.gameWidth,
-      this.gameHeight / 6,
-      0x8b4513
-    );
-    this.physics.add.existing(this.ground, true);
-  }
-
-  createPlatforms() {
-    const data = [
-      { posX: 0, posY: 930, scaleX: 0.4, scaleY: 0.5 },
-      { posX: 0, posY: 680, scaleX: 1.1, scaleY: 0.5 },
-      { posX: 280, posY: 850, scaleX: 0.7, scaleY: 0.5 },
-      { posX: 620, posY: 560, scaleX: 0.4, scaleY: 0.5 },
-      { posX: 680, posY: 760, scaleX: 0.3, scaleY: 0.5 },
-      { posX: 700, posY: 930, scaleX: 0.3, scaleY: 0.5 },
-      { posX: 925, posY: 800, scaleX: 0.8, scaleY: 0.5 },
-      { posX: 950, posY: 600, scaleX: 0.3, scaleY: 0.5 },
-      { posX: 1100, posY: 700, scaleX: 0.3, scaleY: 0.5 },
+  loadMapImages() {
+    this.mapImages = [
+      'bg_FG_0',
+      'at_bgrock_0',
+      'bg_rock_0',
+      'bg_bamboo_0',
+      'spr_bamboo_1',
+      'spr_grass_group_1',
+      'spr_grass_group_2',
+      'bg_forestrock_0',
     ];
 
-    this.platformFactory(data);
+    this.mapImages.forEach(image => {
+      this.load.image(image, `assets/sprites/maps/${image}.png`);
+    });
   }
 
-  platformFactory(data: { posX: number; posY: number; scaleX?: number; scaleY?: number }[]) {
-    this.platforms = this.physics.add.staticGroup();
-
-    data.forEach(({ posX, posY, scaleX = 1, scaleY = 1 }) => {
-      this.platforms
-        .create(posX, posY, 'platform')
-        .setOrigin(0, 1)
-        .setScale(scaleX, scaleY)
-        .refreshBody();
+  createTitle() {
+    this.add.text(16, 16, 'Samurai Gunn Level Test', {
+      fontStyle: 'bold',
+      fontSize: '14px',
+      color: '#fff',
     });
+  }
+
+  createMap() {
+    this.map = this.make.tilemap({ key: 'canyon_map' });
+    const tilesets: Phaser.Tilemaps.Tileset[] = [];
+
+    this.mapImages.forEach(image => {
+      const tileset = this.map.addTilesetImage(image, image);
+      if (tileset) tilesets.push(tileset);
+    });
+
+    this.createMapLayer('background', tilesets);
+
+    const ground = this.createMapLayer('ground', tilesets);
+    this.platforms = ground.find(ground => ground?.layer.name.includes('platform'))!;
+
+    this.platforms.setCollisionByProperty({ collider: true });
+
+    this.createCharacter();
+
+    this.createMapLayer('foreground', tilesets);
+  }
+
+  createMapLayer(layersGroup: string, tilesets: Phaser.Tilemaps.Tileset[]) {
+    return this.map.layers
+      .filter(layer => layer.name.startsWith(`${layersGroup}/`))
+      .map(layer => {
+        return this.map.createLayer(layer.name, tilesets, 0, 0);
+      });
   }
 
   createCharacter() {
-    this.character = this.physics.add.sprite(450, 600, 'character');
+    this.character = this.physics.add.sprite(150, 150, 'character');
+
+    this.character.setScale(0.4);
 
     this.character.setCollideWorldBounds(true);
-    this.physics.add.collider(this.character, this.ground);
     this.physics.add.collider(this.character, this.platforms);
   }
 
@@ -103,7 +113,7 @@ export class TestScene extends Phaser.Scene {
       this.character.setVelocityX(0);
     }
 
-    if (this.cursors.up?.isDown && this.character.body.touching.down) {
+    if (this.cursors.up?.isDown && this.character.body.blocked.down) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
     }
   }
