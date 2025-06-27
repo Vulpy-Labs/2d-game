@@ -5,6 +5,8 @@ import {
   VIRTUAL_WIDTH,
 } from '../../constants';
 
+type CharacterState = 'IDLE' | 'RUNNING' | 'JUMPING' | 'IN_AIR' | 'LOOKING_UP' | 'LOOKING_DOWN';
+
 export class TestScene extends Phaser.Scene {
   gameWidth = VIRTUAL_WIDTH;
   gameHeight = VIRTUAL_HEIGHT;
@@ -13,26 +15,59 @@ export class TestScene extends Phaser.Scene {
   map: Phaser.Tilemaps.Tilemap;
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  characterState: CharacterState = 'IDLE';
 
   constructor() {
     super('TestScene');
   }
 
   preload() {
+    this.loadAssets();
+  }
+
+  loadAssets() {
+    this.loadMapAssets();
+    this.loadCharacterMovementAssets();
+  }
+
+  loadMapAssets() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
-    this.load.image('character', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
     this.load.tilemapTiledJSON('canyon_map', 'assets/maps/canyon.json');
     this.loadMapImages();
+  }
+
+  loadCharacterMovementAssets() {
+    this.load.spritesheet('spr_idle', 'assets/characters/otomo/v1/spr_idle.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet('spr_running', 'assets/characters/otomo/v1/spr_running.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet('spr_jump', 'assets/characters/otomo/v1/spr_jump.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet('spr_look_up', 'assets/characters/otomo/v1/spr_lookup.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet('spr_look_down', 'assets/characters/otomo/v1/spr_lookdown.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
   }
 
   create() {
     this.createMap();
     this.createTitle();
+    this.createCharacter();
     this.createKeyboardInputs();
   }
 
   update() {
-    this.updateCharacterMoviment();
+    this.updateCharacterMovement();
   }
 
   loadMapImages() {
@@ -76,8 +111,6 @@ export class TestScene extends Phaser.Scene {
 
     this.platforms.setCollisionByProperty({ collider: true });
 
-    this.createCharacter();
-
     this.createMapLayer('foreground', tilesets);
   }
 
@@ -90,31 +123,142 @@ export class TestScene extends Phaser.Scene {
   }
 
   createCharacter() {
-    this.character = this.physics.add.sprite(150, 150, 'character');
+    this.character = this.physics.add.sprite(150, 100, 'spr_idle');
 
-    this.character.setScale(0.4);
+    this.createCharacterCollisions();
+    this.createCharacterAnimations();
+  }
 
+  createCharacterCollisions() {
     this.character.setCollideWorldBounds(true);
     this.physics.add.collider(this.character, this.platforms);
+  }
+
+  createCharacterAnimations() {
+    this.createCharacterMovementAnimations();
+  }
+
+  createCharacterMovementAnimations() {
+    this.anims.create({
+      key: 'anim_idle',
+      frames: this.anims.generateFrameNumbers('spr_idle', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_running',
+      frames: this.anims.generateFrameNumbers('spr_running', { start: 0, end: 1 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_look_up',
+      frames: this.anims.generateFrameNumbers('spr_look_up', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_look_down',
+      frames: this.anims.generateFrameNumbers('spr_look_down', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_jump',
+      frames: this.anims.generateFrameNumbers('spr_jump', { start: 1, end: 2 }),
+      frameRate: 12,
+    });
+
+    this.anims.create({
+      key: 'anim_in_air',
+      frames: this.anims.generateFrameNumbers('spr_jump', { start: 2, end: 2 }),
+      frameRate: 12,
+    });
+  }
+
+  setCharacterState(newState: CharacterState) {
+    if (this.characterState === newState) return;
+
+    this.characterState = newState;
+
+    switch (newState) {
+      case 'IDLE':
+        this.character.anims.play('anim_idle', true);
+        break;
+      case 'RUNNING':
+        this.character.anims.play('anim_running', true);
+        break;
+      case 'JUMPING':
+        this.character.anims.play('anim_jump', true);
+        break;
+      case 'IN_AIR':
+        this.character.anims.play('anim_in_air', true);
+        break;
+      case 'LOOKING_UP':
+        this.character.anims.play('anim_look_up', true);
+        break;
+      case 'LOOKING_DOWN':
+        this.character.anims.play('anim_look_down', true);
+        break;
+    }
   }
 
   createKeyboardInputs() {
     this.cursors = this.input.keyboard!.createCursorKeys();
   }
 
-  updateCharacterMoviment() {
+  updateCharacterMovement() {
     if (!this.character || !this.cursors) return;
 
-    if (this.cursors.left?.isDown) {
+    this.updateHorizontalMovement();
+    this.updateVerticalMovement();
+  }
+
+  updateHorizontalMovement() {
+    const onGround = this.character.body.blocked.down;
+    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
+
+    if (this.cursors.left.isDown) {
       this.character.setVelocityX(-CHARACTER_SPEED_X);
-    } else if (this.cursors.right?.isDown) {
+      this.character.setFlipX(true);
+
+      if (onGround) {
+        this.setCharacterState('RUNNING');
+      }
+    } else if (this.cursors.right.isDown) {
       this.character.setVelocityX(CHARACTER_SPEED_X);
-    } else {
+      this.character.setFlipX(false);
+
+      if (onGround) {
+        this.setCharacterState('RUNNING');
+      }
+    } else if (onGround && !isMovingHorizontally) {
       this.character.setVelocityX(0);
+      this.setCharacterState('IDLE');
+    }
+  }
+
+  updateVerticalMovement() {
+    const onGround = this.character.body.blocked.down;
+    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
+
+    if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && onGround) {
+      this.character.setVelocityY(-CHARACTER_SPEED_Y);
+      this.setCharacterState('JUMPING');
     }
 
-    if (this.cursors.up?.isDown && this.character.body.blocked.down) {
-      this.character.setVelocityY(-CHARACTER_SPEED_Y);
+    if (!onGround) {
+      this.setCharacterState('IN_AIR');
+    }
+
+    if (this.cursors.up.isDown && !isMovingHorizontally && onGround) {
+      this.setCharacterState('LOOKING_UP');
+    } else if (this.cursors.down.isDown && !isMovingHorizontally && onGround) {
+      this.setCharacterState('LOOKING_DOWN');
     }
   }
 }
