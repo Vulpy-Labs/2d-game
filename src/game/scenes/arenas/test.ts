@@ -23,17 +23,17 @@ export class TestScene extends Phaser.Scene {
 
   preload() {
     this.loadAssets();
-    this.load.tilemapTiledJSON('canyon_map', 'assets/maps/canyon.json');
-    this.loadMapImages();
   }
 
   loadAssets() {
-    this.loadArenaAssets();
+    this.loadMapAssets();
     this.loadCharacterMovementAssets();
   }
 
-  loadArenaAssets() {
+  loadMapAssets() {
     this.load.image('platform', 'https://labs.phaser.io/assets/sprites/platform.png');
+    this.load.tilemapTiledJSON('canyon_map', 'assets/maps/canyon.json');
+    this.loadMapImages();
   }
 
   loadCharacterMovementAssets() {
