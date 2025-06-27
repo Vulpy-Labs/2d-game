@@ -62,6 +62,7 @@ export class TestScene extends Phaser.Scene {
   create() {
     this.createMap();
     this.createTitle();
+    this.createCharacter();
     this.createKeyboardInputs();
   }
 
@@ -110,8 +111,6 @@ export class TestScene extends Phaser.Scene {
 
     this.platforms.setCollisionByProperty({ collider: true });
 
-    this.createCharacter();
-
     this.createMapLayer('foreground', tilesets);
   }
 
@@ -125,8 +124,6 @@ export class TestScene extends Phaser.Scene {
 
   createCharacter() {
     this.character = this.physics.add.sprite(150, 100, 'spr_idle');
-
-    // this.character.setScale(0.4);
 
     this.createCharacterCollisions();
     this.createCharacterAnimations();
