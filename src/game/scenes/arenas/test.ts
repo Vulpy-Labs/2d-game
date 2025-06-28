@@ -97,7 +97,7 @@ export class TestScene extends Phaser.Scene {
   }
 
   createTitle() {
-    this.add.text(16, 16, 'Samurai Gunn Level Test', {
+    this.add.text(16, 16, 'Slash Out Level Test', {
       fontStyle: 'bold',
       fontSize: '14px',
       color: '#fff',
