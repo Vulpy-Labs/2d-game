@@ -247,6 +247,18 @@ export class TestScene extends Phaser.Scene {
       case 'LOOKING_DOWN':
         this.character.anims.play('anim_look_down', true);
         break;
+      case 'ATTACKING_SWORD':
+        this.character.anims.play('anim_attack_sword', true);
+        this.character.anims.play('anims_attack_sword_trail', true);
+        break;
+      case 'ATTACKING_SWORD_UP':
+        this.character.anims.play('anim_attack_sword_up', true);
+        this.character.anims.play('anims_attack_sword_trail', true);
+        break;
+      case 'ATTACKING_SWORD_DOWN':
+        this.character.anims.play('anim_attack_sword_down', true);
+        this.character.anims.play('anims_attack_sword_trail', true);
+        break;
     }
   }
 
