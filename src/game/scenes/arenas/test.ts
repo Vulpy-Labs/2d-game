@@ -110,6 +110,7 @@ export class TestScene extends Phaser.Scene {
 
   update() {
     this.updateCharacterMovement();
+    this.updateCharacterAttack();
   }
 
   loadMapImages() {
@@ -301,6 +302,27 @@ export class TestScene extends Phaser.Scene {
       this.setCharacterState('LOOKING_UP');
     } else if (this.cursors.down.isDown && !isMovingHorizontally && onGround) {
       this.setCharacterState('LOOKING_DOWN');
+    }
+  }
+
+  updateCharacterAttack() {
+    /**
+     * Todo: () => Configurar animações do trail da espada
+     * Todo: () => Adicionar trails da espada na frete
+     * Todo: () => Adicionar trails da espada em cima
+     * Todo: () => Adicionar trails da espada em baixo
+     */
+
+    if (
+      this.keyboardInputs.attack.isDown &&
+      this.characterState !== 'LOOKING_UP' &&
+      this.characterState !== 'LOOKING_DOWN'
+    ) {
+      this.setCharacterState('ATTACKING_SWORD');
+    } else if (this.keyboardInputs.attack.isDown && this.characterState === 'LOOKING_UP') {
+      this.setCharacterState('ATTACKING_SWORD_UP');
+    } else if (this.keyboardInputs.attack.isDown && this.characterState === 'LOOKING_DOWN') {
+      this.setCharacterState('ATTACKING_SWORD_DOWN');
     }
   }
 }
