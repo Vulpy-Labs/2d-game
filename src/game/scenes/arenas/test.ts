@@ -179,6 +179,7 @@ export class TestScene extends Phaser.Scene {
 
   createCharacterAnimations() {
     this.createCharacterMovementAnimations();
+    this.createCharacterAttackAnimations();
   }
 
   createCharacterMovementAnimations() {
