@@ -5,7 +5,16 @@ import {
   VIRTUAL_WIDTH,
 } from '../../constants';
 
-type CharacterState = 'IDLE' | 'RUNNING' | 'JUMPING' | 'IN_AIR' | 'LOOKING_UP' | 'LOOKING_DOWN';
+type CharacterState =
+  | 'IDLE'
+  | 'RUNNING'
+  | 'JUMPING'
+  | 'IN_AIR'
+  | 'LOOKING_UP'
+  | 'LOOKING_DOWN'
+  | 'ATTACKING_SWORD'
+  | 'ATTACKING_SWORD_UP'
+  | 'ATTACKING_SWORD_DOWN';
 
 export class TestScene extends Phaser.Scene {
   gameWidth = VIRTUAL_WIDTH;
