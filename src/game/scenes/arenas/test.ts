@@ -25,6 +25,16 @@ export class TestScene extends Phaser.Scene {
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   characterState: CharacterState = 'IDLE';
+  isCharacterMovingHorizontally: boolean;
+  keyboardInputs: {
+    left: Phaser.Input.Keyboard.Key;
+    right: Phaser.Input.Keyboard.Key;
+    up: Phaser.Input.Keyboard.Key;
+    down: Phaser.Input.Keyboard.Key;
+    jump: Phaser.Input.Keyboard.Key;
+    attack: Phaser.Input.Keyboard.Key;
+    dash: Phaser.Input.Keyboard.Key;
+  };
 
   constructor() {
     super('TestScene');
@@ -304,11 +314,28 @@ export class TestScene extends Phaser.Scene {
   }
 
   createKeyboardInputs() {
+    const keyboard = this.input.keyboard!;
+
     this.cursors = this.input.keyboard!.createCursorKeys();
+    this.keyboardInputs = {
+      left: keyboard.addKey('A'),
+      right: keyboard.addKey('D'),
+      up: keyboard.addKey('W'),
+      down: keyboard.addKey('S'),
+      jump: keyboard.addKey('SPACE'),
+      attack: keyboard.addKey('F'),
+      dash: keyboard.addKey('SHIFT'),
+    };
   }
 
   updateCharacterMovement() {
     if (!this.character || !this.cursors) return;
+
+    this.isCharacterMovingHorizontally =
+      this.cursors.left.isDown ||
+      this.keyboardInputs.left.isDown ||
+      this.cursors.right.isDown ||
+      this.keyboardInputs.right.isDown;
 
     this.updateHorizontalMovement();
     this.updateVerticalMovement();
@@ -316,23 +343,22 @@ export class TestScene extends Phaser.Scene {
 
   updateHorizontalMovement() {
     const onGround = this.character.body.blocked.down;
-    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.keyboardInputs.left.isDown) {
       this.character.setVelocityX(-CHARACTER_SPEED_X);
       this.character.setFlipX(true);
 
       if (onGround) {
         this.setCharacterState('RUNNING');
       }
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || this.keyboardInputs.right.isDown) {
       this.character.setVelocityX(CHARACTER_SPEED_X);
       this.character.setFlipX(false);
 
       if (onGround) {
         this.setCharacterState('RUNNING');
       }
-    } else if (onGround && !isMovingHorizontally) {
+    } else if (onGround && !this.isCharacterMovingHorizontally) {
       this.character.setVelocityX(0);
       this.setCharacterState('IDLE');
     }
@@ -340,7 +366,6 @@ export class TestScene extends Phaser.Scene {
 
   updateVerticalMovement() {
     const onGround = this.character.body.blocked.down;
-    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
 
     if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && onGround) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
@@ -351,9 +376,17 @@ export class TestScene extends Phaser.Scene {
       this.setCharacterState('IN_AIR');
     }
 
-    if (this.cursors.up.isDown && !isMovingHorizontally && onGround) {
+    if (
+      (this.cursors.up.isDown || this.keyboardInputs.up.isDown) &&
+      !this.isCharacterMovingHorizontally &&
+      onGround
+    ) {
       this.setCharacterState('LOOKING_UP');
-    } else if (this.cursors.down.isDown && !isMovingHorizontally && onGround) {
+    } else if (
+      (this.cursors.down.isDown || this.keyboardInputs.down.isDown) &&
+      !this.isCharacterMovingHorizontally &&
+      onGround
+    ) {
       this.setCharacterState('LOOKING_DOWN');
     }
   }
