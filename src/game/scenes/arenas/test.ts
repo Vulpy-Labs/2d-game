@@ -223,6 +223,46 @@ export class TestScene extends Phaser.Scene {
     });
   }
 
+  createCharacterAttackAnimations() {
+    this.anims.create({
+      key: 'anim_attack_sword',
+      frames: this.anims.generateFrameNumbers('spr_attack_sword', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_attack_sword_up',
+      frames: this.anims.generateFrameNumbers('spr_attack_sword_up', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_attack_sword_down',
+      frames: this.anims.generateFrameNumbers('spr_attack_sword_down', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anims_attack_sword_trail',
+      frames: [
+        { key: 'spr_sword_0' },
+        { key: 'spr_sword_1' },
+        { key: 'spr_sword_2' },
+        { key: 'spr_sword_3' },
+        { key: 'spr_sword_4' },
+      ],
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    // Create a sprite using the first frame
+    const sprite = this.add.sprite(400, 300, 'spr_sword_0');
+    sprite.play('anims_attack_sword_trail');
+  }
+
   setCharacterState(newState: CharacterState) {
     if (this.characterState === newState) return;
 
