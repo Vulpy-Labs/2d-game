@@ -19,15 +19,19 @@ type PlayerState =
 type WeaponState = 'SWORD_FORWARD' | 'SWORD_UP' | 'SWORD_DOWN';
 
 export class TestScene extends Phaser.Scene {
+  // Map
   gameWidth = VIRTUAL_WIDTH;
   gameHeight = VIRTUAL_HEIGHT;
   mapImages: string[];
   platforms: Phaser.Tilemaps.TilemapLayer;
   map: Phaser.Tilemaps.Tilemap;
+
+  // Character / player
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  characterState: CharacterState = 'IDLE';
-  isCharacterMovingHorizontally: boolean;
+  playerState: PlayerState = 'IDLE';
+  isPlayerMovingHorizontally: boolean;
+  isPlayerTouchingGround: boolean;
   keyboardInputs: {
     left: Phaser.Input.Keyboard.Key;
     right: Phaser.Input.Keyboard.Key;
@@ -37,6 +41,10 @@ export class TestScene extends Phaser.Scene {
     attack: Phaser.Input.Keyboard.Key;
     dash: Phaser.Input.Keyboard.Key;
   };
+
+  // Weapons
+  weaponState: WeaponState;
+  sword: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   constructor() {
     super('TestScene');
