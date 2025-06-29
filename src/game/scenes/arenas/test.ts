@@ -3,6 +3,7 @@ import {
   CHARACTER_SPEED_Y,
   VIRTUAL_HEIGHT,
   VIRTUAL_WIDTH,
+  WEAPONS_OFFSET,
 } from '../../constants';
 
 type PlayerState =
