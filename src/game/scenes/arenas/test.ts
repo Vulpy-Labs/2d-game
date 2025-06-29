@@ -126,6 +126,7 @@ export class TestScene extends Phaser.Scene {
     this.createTitle();
     this.createCharacter();
     this.createKeyboardInputs();
+    this.createWeapons();
   }
 
   update() {
@@ -265,7 +266,9 @@ export class TestScene extends Phaser.Scene {
       frameRate: 7,
       repeat: -1,
     });
+  }
 
+  createWeaponsAnimations() {
     this.anims.create({
       key: 'anims_attack_sword_trail',
       frames: [
