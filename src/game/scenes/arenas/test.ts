@@ -287,10 +287,10 @@ export class TestScene extends Phaser.Scene {
     sprite.play('anims_attack_sword_trail');
   }
 
-  setCharacterState(newState: CharacterState) {
-    if (this.characterState === newState) return;
+  setPlayerState(newState: PlayerState) {
+    if (this.playerState === newState) return;
 
-    this.characterState = newState;
+    this.playerState = newState;
 
     switch (newState) {
       case 'IDLE':
@@ -311,17 +311,18 @@ export class TestScene extends Phaser.Scene {
       case 'LOOKING_DOWN':
         this.character.anims.play('anim_look_down', true);
         break;
-      case 'ATTACKING_SWORD':
+      case 'ATTACKING':
         this.character.anims.play('anim_attack_sword', true);
-        this.character.anims.play('anims_attack_sword_trail', true);
         break;
-      case 'ATTACKING_SWORD_UP':
+      case 'ATTACKING_UP':
         this.character.anims.play('anim_attack_sword_up', true);
-        this.character.anims.play('anims_attack_sword_trail', true);
         break;
-      case 'ATTACKING_SWORD_DOWN':
+      case 'ATTACKING_DOWN':
         this.character.anims.play('anim_attack_sword_down', true);
-        this.character.anims.play('anims_attack_sword_trail', true);
+        break;
+    }
+  }
+
         break;
     }
   }
