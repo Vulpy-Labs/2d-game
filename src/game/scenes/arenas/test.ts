@@ -456,6 +456,36 @@ export class TestScene extends Phaser.Scene {
     }
   }
 
+  updateWeaponsPosition() {
+    let swordX = this.character.x + WEAPONS_OFFSET.SWORD.X;
+    let swordY = this.character.y + WEAPONS_OFFSET.SWORD.Y;
+
+    if (this.playerState === 'LOOKING_UP') {
+      this.sword.setAngle(-90);
+      swordX = this.character.x;
+      swordY = this.character.y - this.character.height - WEAPONS_OFFSET.SWORD.Y;
+      // swordY = posição Y do personagem - altura do personagem - correção (porque precisa de correção?);
+    } else if (this.playerState === 'LOOKING_DOWN') {
+      this.sword.setAngle(90);
+      swordX = this.character.x;
+      swordY = this.character.y + this.character.height + WEAPONS_OFFSET.SWORD.Y;
+    } else {
+      if (this.character.flipX) {
+        swordX = this.character.x + -WEAPONS_OFFSET.SWORD.X;
+
+        this.sword.setAngle(-180);
+      } else {
+        this.sword.setAngle(0);
+      }
+    }
+
+    if (this.physics.overlap(this.character, this.sword)) {
+      console.log('Objects are overlapping!');
+    }
+
+    this.sword.setPosition(swordX, swordY);
+    this.sword.setGravity(0, 0);
+    console.log('🚀 ~ TestScene ~ updateWeaponsPosition ~ this.sword.y:', this.sword.y);
   }
 
   updateCharacterAttack() {
