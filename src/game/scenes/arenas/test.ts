@@ -383,64 +383,64 @@ export class TestScene extends Phaser.Scene {
   updateCharacterMovement() {
     if (!this.character || !this.cursors) return;
 
-    this.isCharacterMovingHorizontally =
+    this.isPlayerMovingHorizontally =
       this.cursors.left.isDown ||
       this.keyboardInputs.left.isDown ||
       this.cursors.right.isDown ||
       this.keyboardInputs.right.isDown;
+
+    this.isPlayerTouchingGround = this.character.body.blocked.down;
 
     this.updateHorizontalMovement();
     this.updateVerticalMovement();
   }
 
   updateHorizontalMovement() {
-    const onGround = this.character.body.blocked.down;
-
     if (this.cursors.left.isDown || this.keyboardInputs.left.isDown) {
       this.character.setVelocityX(-CHARACTER_SPEED_X);
       this.character.setFlipX(true);
 
-      if (onGround) {
-        this.setCharacterState('RUNNING');
+      if (this.isPlayerTouchingGround) {
+        this.setPlayerState('RUNNING');
       }
     } else if (this.cursors.right.isDown || this.keyboardInputs.right.isDown) {
       this.character.setVelocityX(CHARACTER_SPEED_X);
       this.character.setFlipX(false);
 
-      if (onGround) {
-        this.setCharacterState('RUNNING');
+      if (this.isPlayerTouchingGround) {
+        this.setPlayerState('RUNNING');
       }
-    } else if (onGround && !this.isCharacterMovingHorizontally) {
+    } else if (this.isPlayerTouchingGround && !this.isPlayerMovingHorizontally) {
       this.character.setVelocityX(0);
-      this.setCharacterState('IDLE');
+      this.setPlayerState('IDLE');
     }
   }
 
   updateVerticalMovement() {
-    const onGround = this.character.body.blocked.down;
-
-    if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && onGround) {
+    if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && this.isPlayerTouchingGround) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
-      this.setCharacterState('JUMPING');
+      this.setPlayerState('JUMPING');
     }
 
-    if (!onGround) {
-      this.setCharacterState('IN_AIR');
+    if (!this.isPlayerTouchingGround) {
+      this.setPlayerState('IN_AIR');
     }
 
     if (
       (this.cursors.up.isDown || this.keyboardInputs.up.isDown) &&
-      !this.isCharacterMovingHorizontally &&
-      onGround
+      !this.isPlayerMovingHorizontally &&
+      this.isPlayerTouchingGround
     ) {
-      this.setCharacterState('LOOKING_UP');
+      this.setPlayerState('LOOKING_UP');
     } else if (
       (this.cursors.down.isDown || this.keyboardInputs.down.isDown) &&
-      !this.isCharacterMovingHorizontally &&
-      onGround
+      !this.isPlayerMovingHorizontally &&
+      this.isPlayerTouchingGround
     ) {
-      this.setCharacterState('LOOKING_DOWN');
+      this.setPlayerState('LOOKING_DOWN');
     }
+  }
+
   }
 
   updateCharacterAttack() {
