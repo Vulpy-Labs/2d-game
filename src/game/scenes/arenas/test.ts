@@ -59,6 +59,7 @@ export class TestScene extends Phaser.Scene {
     this.loadMapAssets();
     this.loadCharacterMovementAssets();
     this.loadCharacterAttackAssets();
+    this.loadWeaponsAssets();
   }
 
   loadMapAssets() {
@@ -91,10 +92,6 @@ export class TestScene extends Phaser.Scene {
   }
 
   loadCharacterAttackAssets() {
-    this.load.spritesheet('spr_sword', 'assets/sprites/combat/melee/spr_sword/spr_sword.png', {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
     this.load.spritesheet('spr_attack_sword', 'assets/characters/otomo/v1/spr_shortattack.png', {
       frameWidth: 16,
       frameHeight: 16,
@@ -115,7 +112,9 @@ export class TestScene extends Phaser.Scene {
         frameHeight: 16,
       }
     );
+  }
 
+  loadWeaponsAssets() {
     // Sword slash trail
     for (let i = 0; i < 5; i++) {
       this.load.image(`spr_sword_${i}`, `assets/sprites/combat/melee/spr_sword/spr_sword_${i}.png`);
