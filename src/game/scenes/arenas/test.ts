@@ -131,6 +131,7 @@ export class TestScene extends Phaser.Scene {
 
   update() {
     this.updateCharacterMovement();
+    this.updateWeaponsPosition();
     this.updateCharacterAttack();
   }
 
@@ -469,23 +470,27 @@ export class TestScene extends Phaser.Scene {
     }
   }
 
+  updateSwordAttack() {
     /**
-     * Todo: () => Configurar animações do trail da espada
+     * Todo: (V) => Criar espada como objeto
+     * Todo: (V) => Configurar animações do trail da espada
+     * Todo: (V) => Alterar a orientação horizontal da espada conforme a direção de ataque
+     * Todo: () => Alterar a orientação vertical da espada conforme a direção de ataque
+     * Todo: () => Transformar os sprites da espada em um único sprite
      * Todo: () => Adicionar trails da espada na frete
      * Todo: () => Adicionar trails da espada em cima
      * Todo: () => Adicionar trails da espada em baixo
+     * Todo: () => Só mostar a espada quando o jogador atacar
      */
 
-    if (
-      this.keyboardInputs.attack.isDown &&
-      this.characterState !== 'LOOKING_UP' &&
-      this.characterState !== 'LOOKING_DOWN'
-    ) {
-      this.setCharacterState('ATTACKING_SWORD');
-    } else if (this.keyboardInputs.attack.isDown && this.characterState === 'LOOKING_UP') {
-      this.setCharacterState('ATTACKING_SWORD_UP');
-    } else if (this.keyboardInputs.attack.isDown && this.characterState === 'LOOKING_DOWN') {
-      this.setCharacterState('ATTACKING_SWORD_DOWN');
+    if (this.keyboardInputs.attack.isDown) {
+      if (this.playerState === 'LOOKING_UP') {
+        this.setWeaponState('SWORD_UP');
+      } else if (this.playerState === 'LOOKING_DOWN') {
+        this.setWeaponState('SWORD_DOWN');
+      } else {
+        this.setWeaponState('SWORD_FORWARD');
+      }
     }
   }
 }
