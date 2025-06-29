@@ -323,6 +323,20 @@ export class TestScene extends Phaser.Scene {
     }
   }
 
+  setWeaponState(newState: WeaponState) {
+    if (this.weaponState === newState) return;
+
+    this.weaponState = newState;
+
+    switch (newState) {
+      case 'SWORD_FORWARD':
+        this.sword.anims.play('anims_attack_sword_trail', true);
+        break;
+      case 'SWORD_UP':
+        this.sword.anims.play('anims_attack_sword_trail', true);
+        break;
+      case 'SWORD_DOWN':
+        this.sword.anims.play('anims_attack_sword_trail', true);
         break;
     }
   }
@@ -444,6 +458,17 @@ export class TestScene extends Phaser.Scene {
   }
 
   updateCharacterAttack() {
+    if (this.keyboardInputs.attack.isDown) {
+      if (this.playerState === 'LOOKING_UP') {
+        this.setPlayerState('ATTACKING_UP');
+      } else if (this.playerState === 'LOOKING_DOWN') {
+        this.setPlayerState('ATTACKING_DOWN');
+      } else {
+        this.setPlayerState('ATTACKING');
+      }
+    }
+  }
+
     /**
      * Todo: () => Configurar animações do trail da espada
      * Todo: () => Adicionar trails da espada na frete
