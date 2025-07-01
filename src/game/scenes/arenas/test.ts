@@ -364,7 +364,7 @@ export class TestScene extends Phaser.Scene {
 
   createWeapons() {
     this.sword = this.physics.add.sprite(this.character.x, this.character.y, 'spr_sword_0');
-
+    // this.sword.setVisible(false);
     this.createWeaponsAnimations();
     this.createWeaponCollisions();
   }
@@ -488,6 +488,7 @@ export class TestScene extends Phaser.Scene {
 
   updateCharacterAttack() {
     if (this.keyboardInputs.attack.isDown) {
+      // this.sword.setVisible(true);
       if (this.playerState === 'LOOKING_UP') {
         this.setPlayerState('ATTACKING_UP');
       } else if (this.playerState === 'LOOKING_DOWN') {
@@ -495,6 +496,8 @@ export class TestScene extends Phaser.Scene {
       } else {
         this.setPlayerState('ATTACKING');
       }
+    } else {
+      // if (this.sword) this.sword.setVisible(false);
     }
   }
 
