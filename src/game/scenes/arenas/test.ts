@@ -438,8 +438,17 @@ export class TestScene extends Phaser.Scene {
   }
 
   updateWeaponsPosition() {
-    let swordX = this.character.x + WEAPONS_OFFSET.SWORD.X;
-    let swordY = this.character.y + WEAPONS_OFFSET.SWORD.Y;
+    const swordConfig = {
+      x: this.character.x,
+      y: this.character.y,
+      width: SWORD_CONFIG.width,
+      height: SWORD_CONFIG.height,
+      origin: {
+        x: 0,
+        y: 0.5,
+      },
+      angle: 0,
+    };
 
     if (this.playerState === 'LOOKING_UP') {
       this.sword.setAngle(-90);
