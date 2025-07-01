@@ -119,6 +119,11 @@ export class TestScene extends Phaser.Scene {
     for (let i = 0; i < 5; i++) {
       this.load.image(`spr_sword_${i}`, `assets/sprites/combat/melee/spr_sword/spr_sword_${i}.png`);
     }
+
+    this.load.spritesheet('spr_sword_0', 'assets/sprites/combat/melee/spr_sword/spr_sword_0.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
   }
 
   create() {
@@ -358,31 +363,7 @@ export class TestScene extends Phaser.Scene {
   }
 
   createWeapons() {
-    // Create a diagonal gradient rectangle using the Canvas API with more distinct colors
-    const width = 25;
-    const height = 5;
-    const rt = this.textures.createCanvas('rectangle', width, height);
-    if (rt) {
-      const ctx = rt.getContext();
-      if (ctx) {
-        // Diagonal gradient: from top-left (0,0) to bottom-right (width,height)
-        const gradient = ctx.createLinearGradient(0, 0, width, height);
-        gradient.addColorStop(0, '#ff0000'); // Red
-        gradient.addColorStop(0.33, '#ffff00'); // Yellow
-        gradient.addColorStop(0.66, '#00ff00'); // Green
-        gradient.addColorStop(1, '#0000ff'); // Blue
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
-
-        rt.refresh();
-      }
-    }
-
-    this.sword = this.physics.add.sprite(
-      this.character.x + WEAPONS_OFFSET.SWORD.X,
-      this.character.y + WEAPONS_OFFSET.SWORD.Y,
-      'rectangle'
-    );
+    this.sword = this.physics.add.sprite(this.character.x, this.character.y, 'spr_sword_0');
 
     this.createWeaponsAnimations();
     this.createWeaponCollisions();
