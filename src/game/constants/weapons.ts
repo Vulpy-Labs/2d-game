@@ -1,6 +1,4 @@
-export const WEAPONS_OFFSET = {
-  SWORD: {
-    X: 20,
-    Y: 0,
-  },
+export const SWORD_CONFIG = {
+  width: 48,
+  height: 24,
 };
