@@ -451,21 +451,28 @@ export class TestScene extends Phaser.Scene {
     };
 
     if (this.playerState === 'LOOKING_UP') {
-      this.sword.setAngle(-90);
-      swordX = this.character.x;
-      swordY = this.character.y - this.character.height - WEAPONS_OFFSET.SWORD.Y;
-      // swordY = posição Y do personagem - altura do personagem - correção (porque precisa de correção?);
+      swordConfig.angle = -90;
+      swordConfig.origin.y = 1;
+      swordConfig.origin.x = 0.5;
+      swordConfig.x = this.character.x;
+      swordConfig.y = this.character.y - this.character.height;
+      swordConfig.height = SWORD_CONFIG.width;
+      swordConfig.width = SWORD_CONFIG.height;
     } else if (this.playerState === 'LOOKING_DOWN') {
-      this.sword.setAngle(90);
-      swordX = this.character.x;
-      swordY = this.character.y + this.character.height + WEAPONS_OFFSET.SWORD.Y;
+      swordConfig.angle = 90;
+      swordConfig.origin.y = 0;
+      swordConfig.origin.x = 0.5;
+      swordConfig.x = this.character.x;
+      swordConfig.y = this.character.y + this.character.height;
+      swordConfig.height = SWORD_CONFIG.width;
+      swordConfig.width = SWORD_CONFIG.height;
     } else {
       if (this.character.flipX) {
-        swordX = this.character.x + -WEAPONS_OFFSET.SWORD.X;
-
-        this.sword.setAngle(-180);
+        swordConfig.angle = 180;
+        swordConfig.x = this.character.x - this.character.width / 2;
+        swordConfig.origin.x = 1;
       } else {
-        this.sword.setAngle(0);
+        swordConfig.x = this.character.x + this.character.width / 2;
       }
     }
 
@@ -473,9 +480,10 @@ export class TestScene extends Phaser.Scene {
       console.log('Objects are overlapping!');
     }
 
-    this.sword.setPosition(swordX, swordY);
-    this.sword.setGravity(0, 0);
-    console.log('🚀 ~ TestScene ~ updateWeaponsPosition ~ this.sword.y:', this.sword.y);
+    this.sword.setAngle(swordConfig.angle);
+    this.sword.body.setSize(swordConfig.width, swordConfig.height);
+    this.sword.setOrigin(swordConfig.origin.x, swordConfig.origin.y);
+    this.sword.setPosition(swordConfig.x, swordConfig.y);
   }
 
   updateCharacterAttack() {
