@@ -371,7 +371,7 @@ export class TestScene extends Phaser.Scene {
 
   createWeaponCollisions() {
     this.sword.setCollideWorldBounds(true);
-    this.sword.setGravity(0, 0);
+    (this.sword.body as Phaser.Physics.Arcade.Body).allowGravity = false;
     this.physics.add.collider(this.sword, this.character);
     this.physics.add.collider(this.sword, this.platforms);
   }
