@@ -442,41 +442,42 @@ export class TestScene extends Phaser.Scene {
   }
 
   updateSwordPosition() {
+    const originX = 0.5;
+    const originY = 0.5;
+
+    let x = this.character.x;
+    let y = this.character.y;
+    let angle = 0;
+    let width = SWORD_CONFIG.width;
+    let height = SWORD_CONFIG.height;
 
     if (this.playerState === 'LOOKING_UP') {
-      swordConfig.angle = -90;
-      swordConfig.origin.y = 1;
-      swordConfig.origin.x = 0.5;
-      swordConfig.x = this.character.x;
-      swordConfig.y = this.character.y - this.character.height;
-      swordConfig.height = SWORD_CONFIG.width;
-      swordConfig.width = SWORD_CONFIG.height;
+      angle = -90;
+      width = SWORD_CONFIG.height;
+      height = SWORD_CONFIG.width;
+      x = this.character.x;
+      y = this.character.y - this.character.height / 2 - height / 2;
     } else if (this.playerState === 'LOOKING_DOWN') {
-      swordConfig.angle = 90;
-      swordConfig.origin.y = 0;
-      swordConfig.origin.x = 0.5;
-      swordConfig.x = this.character.x;
-      swordConfig.y = this.character.y + this.character.height;
-      swordConfig.height = SWORD_CONFIG.width;
-      swordConfig.width = SWORD_CONFIG.height;
+      angle = 90;
+      width = SWORD_CONFIG.height;
+      height = SWORD_CONFIG.width;
+      x = this.character.x;
+      y = this.character.y + this.character.height / 2 + height / 2;
     } else {
       if (this.character.flipX) {
-        swordConfig.angle = 180;
-        swordConfig.x = this.character.x - this.character.width / 2;
-        swordConfig.origin.x = 1;
+        angle = 180;
+        x = this.character.x - this.character.width / 2 - width / 2;
       } else {
-        swordConfig.x = this.character.x + this.character.width / 2;
+        angle = 0;
+        x = this.character.x + this.character.width / 2 + width / 2;
       }
+      y = this.character.y;
     }
 
-    if (this.physics.overlap(this.character, this.sword)) {
-      console.log('Objects are overlapping!');
-    }
-
-    this.sword.setAngle(swordConfig.angle);
-    this.sword.body.setSize(swordConfig.width, swordConfig.height);
-    this.sword.setOrigin(swordConfig.origin.x, swordConfig.origin.y);
-    this.sword.setPosition(swordConfig.x, swordConfig.y);
+    this.sword.setOrigin(originX, originY);
+    this.sword.setAngle(angle);
+    this.sword.body.setSize(width, height);
+    this.sword.setPosition(x, y);
   }
 
   updateCharacterAttack() {
