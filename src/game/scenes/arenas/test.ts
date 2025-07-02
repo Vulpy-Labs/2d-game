@@ -500,20 +500,6 @@ export class TestScene extends Phaser.Scene {
   }
 
   updateSwordAttack() {
-    /**
-     * Todo: (V) => Criar espada como objeto
-     * Todo: (V) => Configurar animações do trail da espada
-     * Todo: (V) => Alterar a orientação horizontal do body da espada conforme a direção de ataque
-     * Todo: (V) => Alterar a orientação vertical do body da espada conforme a direção de ataque
-     * Todo: () => Alterar a orientação horizontal visual da espada conforme a direção de ataque
-     * Todo: () => Alterar a orientação vertical visual da espada conforme a direção de ataque
-     * Todo: () => Transformar os sprites da espada em um único sprite
-     * Todo: () => Adicionar trails da espada na frete
-     * Todo: () => Adicionar trails da espada em cima
-     * Todo: () => Adicionar trails da espada em baixo
-     * Todo: (V) => Só mostar a espada quando o jogador atacar
-     */
-
     if (this.keyboardInputs.attack.isDown) {
       if (this.playerState === 'LOOKING_UP') {
         this.setWeaponState('SWORD_UP');
