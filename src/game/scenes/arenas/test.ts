@@ -120,10 +120,14 @@ export class TestScene extends Phaser.Scene {
       this.load.image(`spr_sword_${i}`, `assets/sprites/combat/melee/spr_sword/spr_sword_${i}.png`);
     }
 
-    this.load.spritesheet('spr_sword_0', 'assets/sprites/combat/melee/spr_sword/spr_sword_0.png', {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
+    this.load.spritesheet(
+      'spr_sword_idle',
+      'assets/sprites/combat/melee/spr_sword/spr_sword_0.png',
+      {
+        frameWidth: 16,
+        frameHeight: 16,
+      }
+    );
   }
 
   create() {
