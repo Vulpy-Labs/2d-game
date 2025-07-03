@@ -3,19 +3,49 @@ import {
   CHARACTER_SPEED_Y,
   VIRTUAL_HEIGHT,
   VIRTUAL_WIDTH,
+  SWORD_CONFIG,
 } from '../../constants';
 
-type CharacterState = 'IDLE' | 'RUNNING' | 'JUMPING' | 'IN_AIR' | 'LOOKING_UP' | 'LOOKING_DOWN';
+type PlayerState =
+  | 'IDLE'
+  | 'RUNNING'
+  | 'JUMPING'
+  | 'IN_AIR'
+  | 'LOOKING_UP'
+  | 'LOOKING_DOWN'
+  | 'ATTACKING'
+  | 'ATTACKING_UP'
+  | 'ATTACKING_DOWN';
+
+type WeaponState = 'SWORD_FORWARD' | 'SWORD_UP' | 'SWORD_DOWN';
 
 export class TestScene extends Phaser.Scene {
+  // Map
   gameWidth = VIRTUAL_WIDTH;
   gameHeight = VIRTUAL_HEIGHT;
   mapImages: string[];
   platforms: Phaser.Tilemaps.TilemapLayer;
   map: Phaser.Tilemaps.Tilemap;
+
+  // Character / player
   character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  characterState: CharacterState = 'IDLE';
+  playerState: PlayerState = 'IDLE';
+  isPlayerMovingHorizontally: boolean;
+  isPlayerTouchingGround: boolean;
+  keyboardInputs: {
+    left: Phaser.Input.Keyboard.Key;
+    right: Phaser.Input.Keyboard.Key;
+    up: Phaser.Input.Keyboard.Key;
+    down: Phaser.Input.Keyboard.Key;
+    jump: Phaser.Input.Keyboard.Key;
+    attack: Phaser.Input.Keyboard.Key;
+    dash: Phaser.Input.Keyboard.Key;
+  };
+
+  // Weapons
+  weaponState: WeaponState;
+  sword: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   constructor() {
     super('TestScene');
@@ -28,6 +58,8 @@ export class TestScene extends Phaser.Scene {
   loadAssets() {
     this.loadMapAssets();
     this.loadCharacterMovementAssets();
+    this.loadCharacterAttackAssets();
+    this.loadWeaponsAssets();
   }
 
   loadMapAssets() {
@@ -59,15 +91,57 @@ export class TestScene extends Phaser.Scene {
     });
   }
 
+  loadCharacterAttackAssets() {
+    this.load.spritesheet('spr_attack_sword', 'assets/characters/otomo/v1/spr_shortattack.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet(
+      'spr_attack_sword_up',
+      'assets/characters/otomo/v1/spr_shortattackup.png',
+      {
+        frameWidth: 16,
+        frameHeight: 16,
+      }
+    );
+    this.load.spritesheet(
+      'spr_attack_sword_down',
+      'assets/characters/otomo/v1/spr_shortattackdown.png',
+      {
+        frameWidth: 16,
+        frameHeight: 16,
+      }
+    );
+  }
+
+  loadWeaponsAssets() {
+    // Sword slash trail
+    for (let i = 0; i < 5; i++) {
+      this.load.image(`spr_sword_${i}`, `assets/sprites/combat/melee/spr_sword/spr_sword_${i}.png`);
+    }
+
+    this.load.spritesheet(
+      'spr_sword_idle',
+      'assets/sprites/combat/melee/spr_sword/spr_sword_0.png',
+      {
+        frameWidth: 16,
+        frameHeight: 16,
+      }
+    );
+  }
+
   create() {
     this.createMap();
     this.createTitle();
     this.createCharacter();
     this.createKeyboardInputs();
+    this.createWeapons();
   }
 
   update() {
     this.updateCharacterMovement();
+    this.updateWeaponsPosition();
+    this.updateCharacterAttack();
   }
 
   loadMapImages() {
@@ -88,7 +162,7 @@ export class TestScene extends Phaser.Scene {
   }
 
   createTitle() {
-    this.add.text(16, 16, 'Samurai Gunn Level Test', {
+    this.add.text(16, 16, 'Slash Out Level Test', {
       fontStyle: 'bold',
       fontSize: '14px',
       color: '#fff',
@@ -136,6 +210,7 @@ export class TestScene extends Phaser.Scene {
 
   createCharacterAnimations() {
     this.createCharacterMovementAnimations();
+    this.createCharacterAttackAnimations();
   }
 
   createCharacterMovementAnimations() {
@@ -180,10 +255,52 @@ export class TestScene extends Phaser.Scene {
     });
   }
 
-  setCharacterState(newState: CharacterState) {
-    if (this.characterState === newState) return;
+  createCharacterAttackAnimations() {
+    this.anims.create({
+      key: 'anim_attack_sword',
+      frames: this.anims.generateFrameNumbers('spr_attack_sword', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
 
-    this.characterState = newState;
+    this.anims.create({
+      key: 'anim_attack_sword_up',
+      frames: this.anims.generateFrameNumbers('spr_attack_sword_up', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'anim_attack_sword_down',
+      frames: this.anims.generateFrameNumbers('spr_attack_sword_down', { start: 0, end: 0 }),
+      frameRate: 7,
+      repeat: -1,
+    });
+  }
+
+  createWeaponsAnimations() {
+    this.anims.create({
+      key: 'anims_attack_sword_trail',
+      frames: [
+        { key: 'spr_sword_0' },
+        { key: 'spr_sword_1' },
+        { key: 'spr_sword_2' },
+        { key: 'spr_sword_3' },
+        { key: 'spr_sword_4' },
+      ],
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    // Create a sprite using the first frame
+    const sprite = this.add.sprite(400, 300, 'spr_sword_0');
+    sprite.play('anims_attack_sword_trail');
+  }
+
+  setPlayerState(newState: PlayerState) {
+    if (this.playerState === newState) return;
+
+    this.playerState = newState;
 
     switch (newState) {
       case 'IDLE':
@@ -204,61 +321,193 @@ export class TestScene extends Phaser.Scene {
       case 'LOOKING_DOWN':
         this.character.anims.play('anim_look_down', true);
         break;
+      case 'ATTACKING':
+        this.character.anims.play('anim_attack_sword', true);
+        break;
+      case 'ATTACKING_UP':
+        this.character.anims.play('anim_attack_sword_up', true);
+        break;
+      case 'ATTACKING_DOWN':
+        this.character.anims.play('anim_attack_sword_down', true);
+        break;
+    }
+  }
+
+  setWeaponState(newState: WeaponState) {
+    if (this.weaponState === newState) return;
+
+    this.weaponState = newState;
+
+    switch (newState) {
+      case 'SWORD_FORWARD':
+        this.sword.anims.play('anims_attack_sword_trail', true);
+        break;
+      case 'SWORD_UP':
+        this.sword.anims.play('anims_attack_sword_trail', true);
+        break;
+      case 'SWORD_DOWN':
+        this.sword.anims.play('anims_attack_sword_trail', true);
+        break;
     }
   }
 
   createKeyboardInputs() {
+    const keyboard = this.input.keyboard!;
+
     this.cursors = this.input.keyboard!.createCursorKeys();
+    this.keyboardInputs = {
+      left: keyboard.addKey('A'),
+      right: keyboard.addKey('D'),
+      up: keyboard.addKey('W'),
+      down: keyboard.addKey('S'),
+      jump: keyboard.addKey('SPACE'),
+      attack: keyboard.addKey('F'),
+      dash: keyboard.addKey('SHIFT'),
+    };
+  }
+
+  createWeapons() {
+    this.sword = this.physics.add.sprite(this.character.x, this.character.y, 'spr_sword_0');
+    this.sword.setVisible(false);
+    this.createWeaponsAnimations();
+    this.createWeaponCollisions();
+  }
+
+  createWeaponCollisions() {
+    this.sword.setCollideWorldBounds(true);
+    (this.sword.body as Phaser.Physics.Arcade.Body).allowGravity = false;
+    this.physics.add.overlap(this.sword, this.character);
+    this.physics.add.overlap(this.sword, this.platforms);
   }
 
   updateCharacterMovement() {
     if (!this.character || !this.cursors) return;
+
+    this.isPlayerMovingHorizontally =
+      this.cursors.left.isDown ||
+      this.keyboardInputs.left.isDown ||
+      this.cursors.right.isDown ||
+      this.keyboardInputs.right.isDown;
+
+    this.isPlayerTouchingGround = this.character.body.blocked.down;
 
     this.updateHorizontalMovement();
     this.updateVerticalMovement();
   }
 
   updateHorizontalMovement() {
-    const onGround = this.character.body.blocked.down;
-    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
-
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.keyboardInputs.left.isDown) {
       this.character.setVelocityX(-CHARACTER_SPEED_X);
       this.character.setFlipX(true);
 
-      if (onGround) {
-        this.setCharacterState('RUNNING');
+      if (this.isPlayerTouchingGround) {
+        this.setPlayerState('RUNNING');
       }
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || this.keyboardInputs.right.isDown) {
       this.character.setVelocityX(CHARACTER_SPEED_X);
       this.character.setFlipX(false);
 
-      if (onGround) {
-        this.setCharacterState('RUNNING');
+      if (this.isPlayerTouchingGround) {
+        this.setPlayerState('RUNNING');
       }
-    } else if (onGround && !isMovingHorizontally) {
+    } else if (this.isPlayerTouchingGround && !this.isPlayerMovingHorizontally) {
       this.character.setVelocityX(0);
-      this.setCharacterState('IDLE');
+      this.setPlayerState('IDLE');
     }
   }
 
   updateVerticalMovement() {
-    const onGround = this.character.body.blocked.down;
-    const isMovingHorizontally = this.cursors.left.isDown || this.cursors.right.isDown;
-
-    if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && onGround) {
+    if (Phaser.Input.Keyboard.JustDown(this.cursors.space) && this.isPlayerTouchingGround) {
       this.character.setVelocityY(-CHARACTER_SPEED_Y);
-      this.setCharacterState('JUMPING');
+      this.setPlayerState('JUMPING');
     }
 
-    if (!onGround) {
-      this.setCharacterState('IN_AIR');
+    if (!this.isPlayerTouchingGround) {
+      this.setPlayerState('IN_AIR');
     }
 
-    if (this.cursors.up.isDown && !isMovingHorizontally && onGround) {
-      this.setCharacterState('LOOKING_UP');
-    } else if (this.cursors.down.isDown && !isMovingHorizontally && onGround) {
-      this.setCharacterState('LOOKING_DOWN');
+    if (
+      (this.cursors.up.isDown || this.keyboardInputs.up.isDown) &&
+      !this.isPlayerMovingHorizontally &&
+      this.isPlayerTouchingGround
+    ) {
+      this.setPlayerState('LOOKING_UP');
+    } else if (
+      (this.cursors.down.isDown || this.keyboardInputs.down.isDown) &&
+      !this.isPlayerMovingHorizontally &&
+      this.isPlayerTouchingGround
+    ) {
+      this.setPlayerState('LOOKING_DOWN');
+    }
+  }
+
+  updateWeaponsPosition() {
+    this.updateSwordPosition();
+  }
+
+  updateSwordPosition() {
+    const originX = 0.5;
+    const originY = 0.5;
+
+    let x = this.character.x;
+    let y = this.character.y;
+    let angle = 0;
+    let width = SWORD_CONFIG.width;
+    let height = SWORD_CONFIG.height;
+
+    if (this.playerState === 'LOOKING_UP') {
+      angle = -90;
+      width = SWORD_CONFIG.height;
+      height = SWORD_CONFIG.width;
+      x = this.character.x;
+      y = this.character.y - this.character.height / 2 - height / 2;
+    } else if (this.playerState === 'LOOKING_DOWN') {
+      angle = 90;
+      width = SWORD_CONFIG.height;
+      height = SWORD_CONFIG.width;
+      x = this.character.x;
+      y = this.character.y + this.character.height / 2 + height / 2;
+    } else {
+      if (this.character.flipX) {
+        angle = 180;
+        x = this.character.x - this.character.width / 2 - width / 2;
+      } else {
+        angle = 0;
+        x = this.character.x + this.character.width / 2 + width / 2;
+      }
+      y = this.character.y;
+    }
+
+    this.sword.setOrigin(originX, originY);
+    this.sword.setAngle(angle);
+    this.sword.body.setSize(width, height);
+    this.sword.setPosition(x, y);
+  }
+
+  updateCharacterAttack() {
+    if (this.keyboardInputs.attack.isDown) {
+      this.sword.setVisible(true);
+      if (this.playerState === 'LOOKING_UP') {
+        this.setPlayerState('ATTACKING_UP');
+      } else if (this.playerState === 'LOOKING_DOWN') {
+        this.setPlayerState('ATTACKING_DOWN');
+      } else {
+        this.setPlayerState('ATTACKING');
+      }
+    } else {
+      if (this.sword) this.sword.setVisible(false);
+    }
+  }
+
+  updateSwordAttack() {
+    if (this.keyboardInputs.attack.isDown) {
+      if (this.playerState === 'LOOKING_UP') {
+        this.setWeaponState('SWORD_UP');
+      } else if (this.playerState === 'LOOKING_DOWN') {
+        this.setWeaponState('SWORD_DOWN');
+      } else {
+        this.setWeaponState('SWORD_FORWARD');
+      }
     }
   }
 }
